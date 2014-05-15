@@ -3,7 +3,7 @@ BASSquareCropper
 
 A simple, customizable square scale and crop view controller
 
-<img style="float:left" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppingcreenshot.png" width="320" height="480" />
+<img style="float:left" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppingscreenshot.png" width="320" height="480" />
 <img style="float:right" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppedscreenshot.png" width="320" height="480" />
 
 ##Usage
