@@ -33,7 +33,7 @@
 - (void)showCropper
 {
     UIImage *imageToCrop = [UIImage imageNamed:@"test-image"];
-    BASSquareCropperViewController *squareCropperViewController = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop minimumCroppedImageWidthHeight:200.0f];
+    BASSquareCropperViewController *squareCropperViewController = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop minimumCroppedImageSideLength:200.0f];
     squareCropperViewController.squareCropperDelegate = self;
 /*  Use these settings to play with the layout
     squareCropperViewController.backgroundColor = [UIColor whiteColor];
