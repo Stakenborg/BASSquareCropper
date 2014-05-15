@@ -24,18 +24,18 @@
 @property (nonatomic, assign) CGFloat      minimumZoomScale;
 @property (nonatomic, assign) CGPoint      contentOffset;
 @property (nonatomic, assign) UIEdgeInsets contentInset;
-@property (nonatomic, assign) CGFloat      minimumCroppedImageWidthHeight;
+@property (nonatomic, assign) CGFloat      minimumCroppedImageSideLength;
 
 @end
 
 @implementation BASSquareCropperViewController
 
-- (instancetype)initWithImage:(UIImage *)image minimumCroppedImageWidthHeight:(CGFloat)minimumCroppedImageWidthHeight
+- (instancetype)initWithImage:(UIImage *)image minimumCroppedImageSideLength:(CGFloat)minimumCroppedImageSideLength
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _imageToCrop = image;
-        _minimumCroppedImageWidthHeight = minimumCroppedImageWidthHeight;
+        _minimumCroppedImageSideLength = minimumCroppedImageSideLength;
     }
     return self;
 }
@@ -67,7 +67,7 @@
     self.imageView = [[UIImageView alloc] initWithImage:self.imageToCrop];
     self.imageView.hidden = YES;
     [self.imageView sizeToFit];
-    self.minimumCroppedImageWidthHeight = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageWidthHeight);
+    self.minimumCroppedImageSideLength = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageSideLength);
     
     self.croppingOverlayView = [UIView new];
     self.croppingOverlayView.backgroundColor = [UIColor clearColor];
@@ -176,8 +176,8 @@
     CGFloat minZoomScaleX = CGRectGetWidth(self.croppingOverlayView.bounds) / self.imageToCrop.size.width;
     CGFloat minZoomScaleY = CGRectGetHeight(self.croppingOverlayView.bounds) / self.imageToCrop.size.height;
     
-    CGFloat maxZoomScaleX = CGRectGetWidth(self.croppingOverlayView.bounds) / self.minimumCroppedImageWidthHeight;
-    CGFloat maxZoomScaleY = CGRectGetHeight(self.croppingOverlayView.bounds) / self.minimumCroppedImageWidthHeight;
+    CGFloat maxZoomScaleX = CGRectGetWidth(self.croppingOverlayView.bounds) / self.minimumCroppedImageSideLength;
+    CGFloat maxZoomScaleY = CGRectGetHeight(self.croppingOverlayView.bounds) / self.minimumCroppedImageSideLength;
     
     self.scrollView.minimumZoomScale = MAX(minZoomScaleX, minZoomScaleY);
     self.scrollView.maximumZoomScale = MIN(maxZoomScaleX, maxZoomScaleY);

@@ -28,6 +28,6 @@
 @property (nonatomic, copy)   NSString *cancelText;
 @property (nonatomic, assign) id<BASSquareCropperDelegate>squareCropperDelegate;
 
-- (instancetype)initWithImage:(UIImage *)image minimumCroppedImageWidthHeight:(CGFloat)minimumCroppedImageWidthHeight;
+- (instancetype)initWithImage:(UIImage *)image minimumCroppedImageSideLength:(CGFloat)minimumCroppedImageSideLength;
 
 @end
