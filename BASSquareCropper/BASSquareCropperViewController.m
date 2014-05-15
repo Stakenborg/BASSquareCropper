@@ -17,6 +17,7 @@
 @property (nonatomic, strong) UIView       *bottomBorderView;
 @property (nonatomic, strong) UIImage      *imageToCrop;
 @property (nonatomic, strong) UIButton     *doneButton;
+@property (nonatomic, strong) UIButton     *cancelButton;
 
 @property (nonatomic, assign) CGFloat      zoomScale;
 @property (nonatomic, assign) CGFloat      maximumZoomScale;
@@ -49,6 +50,9 @@
     self.doneFont                = (self.doneFont)                ?: [UIFont systemFontOfSize:16.0f];
     self.doneColor               = (self.doneColor)               ?: [UIColor whiteColor];
     self.doneText                = (self.doneText)                ?: @"Done";
+    self.cancelFont              = (self.cancelFont)              ?: [UIFont systemFontOfSize:14.0f];
+    self.cancelColor             = (self.cancelColor)             ?: [UIColor whiteColor];
+    self.cancelText              = (self.cancelText)              ?: @"Cancel";
     
     self.scrollView = [UIScrollView new];
     self.scrollView.delegate = self;
@@ -89,10 +93,16 @@
     [self.doneButton setTitleColor:self.doneColor forState:UIControlStateNormal];
     self.doneButton.titleLabel.font = self.doneFont;
     [self.doneButton addTarget:self action:@selector(cropImage) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.doneButton sizeToFit];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView, _croppingOverlayView, _topBorderView, _bottomBorderView, _doneButton);
+    self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cancelButton setTitle:self.cancelText forState:UIControlStateNormal];
+    [self.cancelButton setTitleColor:self.cancelColor forState:UIControlStateNormal];
+    self.cancelButton.titleLabel.font = self.cancelFont;
+    [self.cancelButton addTarget:self action:@selector(cancelCrop) forControlEvents:UIControlEventTouchUpInside];
+    [self.cancelButton sizeToFit];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView, _doneButton, _cancelButton, _croppingOverlayView, _topBorderView, _bottomBorderView);
     [views enumerateKeysAndObjectsUsingBlock:^(id key, UIView *view, BOOL *stop) {
         view.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:view];
@@ -104,17 +114,17 @@
         [self.scrollView addSubview:view];
     }];
 
-    NSDictionary *metrics = @{@"statusBarHeight": @(CGRectGetHeight([UIApplication sharedApplication].statusBarFrame))};
-    
     [self.view sendSubviewToBack:_scrollView];
+    [self.view bringSubviewToFront:self.doneButton];
+    [self.view bringSubviewToFront:self.cancelButton];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_scrollView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_scrollView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_croppingOverlayView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topBorderView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomBorderView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topBorderView][_croppingOverlayView][_bottomBorderView]|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_doneButton]-5-|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-statusBarHeight-[_doneButton]" options:0 metrics:metrics views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[_cancelButton]->=0-[_doneButton]-10-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_doneButton]-10-|" options:0 metrics:nil views:views]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_croppingOverlayView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:_croppingOverlayView attribute:NSLayoutAttributeWidth multiplier:1.0f constant:0.0f]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_croppingOverlayView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_imageView]|" options:0 metrics: 0 views:scrollViews]];
@@ -225,6 +235,11 @@
     UIGraphicsEndImageContext();
     
     [self.squareCropperDelegate squareCropperDidCropImage:croppedImage];
+}
+
+- (void)cancelCrop
+{
+    [self.squareCropperDelegate squareCropperDidCancelCrop];
 }
 
 @end

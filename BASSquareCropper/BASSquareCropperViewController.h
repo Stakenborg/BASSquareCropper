@@ -11,6 +11,7 @@
 @protocol BASSquareCropperDelegate <NSObject>
 
 - (void)squareCropperDidCropImage:(UIImage *)croppedImage;
+- (void)squareCropperDidCancelCrop;
 
 @end
 
@@ -22,6 +23,9 @@
 @property (nonatomic, strong) UIFont   *doneFont;
 @property (nonatomic, strong) UIColor  *doneColor;
 @property (nonatomic, copy)   NSString *doneText;
+@property (nonatomic, strong) UIFont   *cancelFont;
+@property (nonatomic, strong) UIColor  *cancelColor;
+@property (nonatomic, copy)   NSString *cancelText;
 @property (nonatomic, assign) id<BASSquareCropperDelegate>squareCropperDelegate;
 
 - (instancetype)initWithImage:(UIImage *)image minimumCroppedImageWidthHeight:(CGFloat)minimumCroppedImageWidthHeight;

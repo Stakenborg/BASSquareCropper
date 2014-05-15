@@ -38,10 +38,13 @@
 /*  Use these settings to play with the layout
     squareCropperViewController.backgroundColor = [UIColor whiteColor];
     squareCropperViewController.borderColor = [UIColor redColor];
-    squareCropperViewController.doneColor = [UIColor blackColor];
+    squareCropperViewController.doneColor = [UIColor orangeColor];
     squareCropperViewController.doneFont = [UIFont fontWithName:@"Avenir-Roman" size:30.0f];
     squareCropperViewController.doneText = @"FINISHED";
-    squareCropperViewController.excludedBackgroundColor = [UIColor blueColor]; 
+    squareCropperViewController.cancelColor = [UIColor greenColor];
+    squareCropperViewController.cancelFont = [UIFont fontWithName:@"Avenir-Black" size:25.0f];
+    squareCropperViewController.cancelText = @"STOP";
+    squareCropperViewController.excludedBackgroundColor = [UIColor blackColor];
  */
     [self presentViewController:squareCropperViewController animated:YES completion:nil];
 }
@@ -50,6 +53,12 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     self.imageView.image = croppedImage;
+}
+
+- (void)squareCropperDidCancelCrop
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    self.imageView.image = nil;
 }
 
 @end
