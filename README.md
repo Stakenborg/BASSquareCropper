@@ -49,7 +49,7 @@ squareCropperViewController.cancelFont = [UIFont fontWithName:@"Avenir-Black" si
 squareCropperViewController.cancelText = @"STOP";
 squareCropperViewController.excludedBackgroundColor = [UIColor blackColor];
 ```
-This would look like hot garbage, but you get the idea.
+This would look like hot garbage, but you get the idea. Anything left unmodified will be defaulted to what is shown in the screenshots.
 
 ##License
 BASSquareCropperController is available under the MIT license.
