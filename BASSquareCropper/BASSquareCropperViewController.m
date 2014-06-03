@@ -67,7 +67,7 @@
     self.imageView = [[UIImageView alloc] initWithImage:self.imageToCrop];
     self.imageView.hidden = YES;
     [self.imageView sizeToFit];
-    self.minimumCroppedImageSideLength = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageSideLength);
+    self.minimumCroppedImageSideLength = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageSideLength)/[[UIScreen mainScreen] scale];
     
     self.croppingOverlayView = [UIView new];
     self.croppingOverlayView.backgroundColor = [UIColor clearColor];
@@ -166,6 +166,13 @@
     [self updateScrollViewParameters];
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate) {
+        [self updateScrollViewParameters];
+    }
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     [self updateScrollViewParameters];
@@ -198,12 +205,13 @@
 
 - (void)cropImage
 {
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
     UIImage *croppedImage = nil;
     
     CGRect croppedImageRect = CGRectZero;
     
     croppedImageRect.size = (CGSize){(CGFloat)round(CGRectGetWidth(self.croppingOverlayView.bounds)/self.zoomScale), (CGFloat)round(CGRectGetHeight(self.croppingOverlayView.bounds)/self.zoomScale)};
-    UIGraphicsBeginImageContextWithOptions(croppedImageRect.size, YES, [[UIScreen mainScreen] scale]);
+    UIGraphicsBeginImageContextWithOptions(croppedImageRect.size, YES, screenScale);
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
@@ -234,12 +242,14 @@
     croppedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    [self.squareCropperDelegate squareCropperDidCropImage:croppedImage];
+    _cropRect = (CGRect){.origin.x = -translation.x*screenScale, .origin.y = -translation.y*screenScale, .size.width = croppedImageRect.size.width*screenScale, .size.height = croppedImageRect.size.height*screenScale};
+    
+    [self.squareCropperDelegate squareCropperDidCropImage:croppedImage inCropper:self];
 }
 
 - (void)cancelCrop
 {
-    [self.squareCropperDelegate squareCropperDidCancelCrop];
+    [self.squareCropperDelegate squareCropperDidCancelCropInCropper:self];
 }
 
 @end
