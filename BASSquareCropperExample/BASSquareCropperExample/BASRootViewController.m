@@ -12,6 +12,7 @@
 @interface BASRootViewController () <BASSquareCropperDelegate>
 
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *sizeLabel;
 
 @end
 
@@ -28,12 +29,16 @@
     
     self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 80, 320, 320)];
     [self.view addSubview:self.imageView];
+    
+    self.sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 410, 320, 20)];
+    self.sizeLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.sizeLabel];
 }
 
 - (void)showCropper
 {
     UIImage *imageToCrop = [UIImage imageNamed:@"test-image"];
-    BASSquareCropperViewController *squareCropperViewController = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop minimumCroppedImageSideLength:200.0f];
+    BASSquareCropperViewController *squareCropperViewController = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop minimumCroppedImageSideLength:400.0f];
     squareCropperViewController.squareCropperDelegate = self;
 /*  Use these settings to play with the layout
     squareCropperViewController.backgroundColor = [UIColor whiteColor];
@@ -49,16 +54,18 @@
     [self presentViewController:squareCropperViewController animated:YES completion:nil];
 }
 
-- (void)squareCropperDidCropImage:(UIImage *)croppedImage
+- (void)squareCropperDidCropImage:(UIImage *)croppedImage inCropper:(BASSquareCropperViewController *)cropper
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    self.sizeLabel.text = NSStringFromCGRect(cropper.cropRect);
     self.imageView.image = croppedImage;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)squareCropperDidCancelCrop
+- (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    self.sizeLabel.text = nil;
     self.imageView.image = nil;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
