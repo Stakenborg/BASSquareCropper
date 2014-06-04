@@ -67,7 +67,7 @@
     self.imageView = [[UIImageView alloc] initWithImage:self.imageToCrop];
     self.imageView.hidden = YES;
     [self.imageView sizeToFit];
-    self.minimumCroppedImageSideLength = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageSideLength)/[[UIScreen mainScreen] scale];
+    self.minimumCroppedImageSideLength = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageSideLength);
     
     self.croppingOverlayView = [UIView new];
     self.croppingOverlayView.backgroundColor = [UIColor clearColor];
@@ -205,13 +205,12 @@
 
 - (void)cropImage
 {
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
     UIImage *croppedImage = nil;
     
     CGRect croppedImageRect = CGRectZero;
     
     croppedImageRect.size = (CGSize){(CGFloat)round(CGRectGetWidth(self.croppingOverlayView.bounds)/self.zoomScale), (CGFloat)round(CGRectGetHeight(self.croppingOverlayView.bounds)/self.zoomScale)};
-    UIGraphicsBeginImageContextWithOptions(croppedImageRect.size, YES, screenScale);
+    UIGraphicsBeginImageContextWithOptions(croppedImageRect.size, YES, [[UIScreen mainScreen] scale]);
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
@@ -242,7 +241,7 @@
     croppedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    _cropRect = (CGRect){.origin.x = -translation.x*screenScale, .origin.y = -translation.y*screenScale, .size.width = croppedImageRect.size.width*screenScale, .size.height = croppedImageRect.size.height*screenScale};
+    _cropRect = (CGRect){.origin.x = -translation.x, .origin.y = -translation.y, .size.width = croppedImageRect.size.width, .size.height = croppedImageRect.size.height};
     
     [self.squareCropperDelegate squareCropperDidCropImage:croppedImage inCropper:self];
 }
