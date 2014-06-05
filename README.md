@@ -3,10 +3,9 @@ BASSquareCropper
 
 A simple, customizable square scale and crop view controller
 
-<div>
-<img align="left" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppingscreenshot.png" width="320" height="480" />
-<img align="right" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppedscreenshot.png" width="320" height="480" />
-</div>
+
+<img src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppingscreenshot.png" width="320" height="480" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppedscreenshot.png" width="320" height="480" />
+
 ##Usage
 
 Simply import the cropper with `#import BASSquareCropperViewController.h`
