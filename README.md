@@ -3,25 +3,28 @@ BASSquareCropper
 
 A simple, customizable square scale and crop view controller
 
+<div>
 <img align="left" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppingscreenshot.png" width="320" height="480" />
 <img align="right" src="https://github.com/Stakenborg/BASSquareCropper/raw/master/croppedscreenshot.png" width="320" height="480" />
-
+</div>
 ##Usage
 
 Simply import the cropper with `#import BASSquareCropperViewController.h`
 
 Listen to the following delegate methods:
-* `- (void)squareCropperDidCropImage:(UIImage *)croppedImage`
-* `- (void)squareCropperDidCancelCrop`
+* `- (void)squareCropperDidCropImage:(UIImage *)croppedImage inCropper:(BASSquareCropperViewController *)cropper`
+* `- (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper`
 
 and handle them according to how your app should function.
 
 Initialize the cropper with an image and a minimum side length as so (0.0f side length means no limit):
-`BASSquareCropperViewController *squareCropperViewController = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop minimumCroppedImageSideLength:200.0f];`
+`BASSquareCropperViewController *squareCropperViewController = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop minimumCroppedImageSideLength:400.0f];`
 
 Don't forget to set the delegate! `squareCropperViewController.squareCropperDelegate = self;`
 
 From here, it's recommended to present this view controller modally, but not required.
+
+If you want to retrieve the finished cropped rect versus the original image, simply access the property `cropRect` on your `BASSquareCropperViewController` in the delegate callback before you dismiss it.
 
 ##Customization
 
