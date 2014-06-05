@@ -143,6 +143,16 @@
     [self resetZoomScaleAndContentOffset];
 }
 
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
 #pragma mark - Helpers
 
 - (void)updateScrollViewParameters
