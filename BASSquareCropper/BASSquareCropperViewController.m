@@ -217,42 +217,14 @@
 {
     UIImage *croppedImage = nil;
     
-    CGRect croppedImageRect = CGRectZero;
-    
-    croppedImageRect.size = (CGSize){(CGFloat)round(CGRectGetWidth(self.croppingOverlayView.bounds)/self.zoomScale), (CGFloat)round(CGRectGetHeight(self.croppingOverlayView.bounds)/self.zoomScale)};
-    UIGraphicsBeginImageContextWithOptions(croppedImageRect.size, YES, [[UIScreen mainScreen] scale]);
-    
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
-    CGContextScaleCTM(ctx, 1.0f, 1.0f);
-    
-    // Translate to the selected offset
-    CGPoint translation = CGPointZero;
-    translation.x = -1.0f * (self.contentOffset.x + self.contentInset.left) / self.zoomScale;
-    translation.y = -1.0f * (self.contentOffset.y + self.contentInset.top) / self.zoomScale;
-    
-    // clamp translation to avoid dark rows on edges of cropped image due to numerical error
-    translation.x = MIN(0.0f, translation.x);
-    translation.y = MIN(0.0f, translation.y);
-    
-    translation.x = MAX(-(self.imageToCrop.size.width - CGRectGetWidth(croppedImageRect)), translation.x);
-    translation.y = MAX(-(self.imageToCrop.size.height - CGRectGetHeight(croppedImageRect)), translation.y);
-    
-    CGContextTranslateCTM(ctx, translation.x, translation.y);
-    
-    // Render the image at full size at (0, 0)
-    // Only the parts we want will be drawn in the context due to translation and scaling
-    // using the UIImage drawing method (rather than the core graphics method) makes it
-    // so that we don't have to flip the coordinate space to put the origin in the bottom
-    // right. It is also great because UIImage takes the imageOrientation into account
-    // when it draws so that we don't have to.
-    [self.imageToCrop drawAtPoint:CGPointZero];
-    
-    croppedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    _cropRect = (CGRect){.origin.x = -translation.x, .origin.y = -translation.y, .size.width = croppedImageRect.size.width, .size.height = croppedImageRect.size.height};
-    
+    _cropRect.size.width = (CGFloat)round(CGRectGetWidth(self.croppingOverlayView.bounds)/self.zoomScale);
+    _cropRect.size.height = (CGFloat)round(CGRectGetHeight(self.croppingOverlayView.bounds)/self.zoomScale);
+    _cropRect.origin.x = (CGFloat)round((self.contentOffset.x + self.contentInset.left)/self.zoomScale);
+    _cropRect.origin.y = (CGFloat)round((self.contentOffset.y + self.contentInset.top)/self.zoomScale);
+    CGImageRef imageRef = CGImageCreateWithImageInRect(self.imageToCrop.CGImage, _cropRect);
+    croppedImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+
     [self.squareCropperDelegate squareCropperDidCropImage:croppedImage inCropper:self];
 }
 
